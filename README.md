@@ -1,14 +1,14 @@
 ### Installation
 
-    npm install appmakers-vue
+    npm install rightcampaignvue
 
 ### Usage
 
 In your `main.js`:
 
-    import AppMakersVue from "appmakers-vue";
+    import RightCampaignVue from "rightcampaignvue";
     
-    Vue.use(AppMakersVue);
+    Vue.use(RightCampaignVue);
 
 ### Examples
 
