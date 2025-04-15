@@ -16,8 +16,6 @@ import ApmPaginationInfo from "./components/ApmPaginationInfo";
 import ApmSearch from "./components/ApmSearch";
 import ApmStatusDot from "./components/ApmStatusDot";
 import ApmSwitch from "./components/ApmSwitch";
-import Switches from 'vue-switches'
-import vSelect from 'vue-select';
 import ApmRemoteSelect from "./components/ApmRemoteSelect";
 import ApmSocialIcon from "./components/ApmSocialIcon";
 import 'vue-select/dist/vue-select.css';
@@ -47,9 +45,7 @@ export const ComponentRegistrar = {
         ApmSocialIcon,
         ApmStatusDot,
         ApmSwitch,
-        Switches,
         ApmRemoteSelect,
-        vSelect,
         ApmEmojis,
         ApmSignature,
         ApmConfirm,

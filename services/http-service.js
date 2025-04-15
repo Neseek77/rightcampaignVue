@@ -1,48 +1,52 @@
-let axios = require('axios');
-import {setupCache} from 'axios-cache-adapter'
+import axios from 'axios'
+import { setupCache } from 'axios-cache-interceptor'
 
-axios.interceptors.request.use(function (config) {
-    config.headers = config.headers || {};
-    if (localStorage.getItem('token')) {
-        config.headers.Authorization = "Bearer " + localStorage.getItem('token');
+// Create a new Axios instance
+let axiosInstance = axios.create()
+
+// Apply the cache interceptor to the instance
+setupCache(axiosInstance, {
+    ttl: 2 * 60 * 1000 // 2 minutes
+})
+
+// Add Authorization header and cache-control conditionally
+axiosInstance.interceptors.request.use(function (config) {
+    config.headers = config.headers || {}
+
+    // Add Bearer token if available
+    const token = localStorage.getItem('token')
+    if (token) {
+        config.headers.Authorization = `Bearer ${token}`
     }
 
-    if (!config.dontCache) {
-        const cache = setupCache({
-            maxAge: 2 * 60 * 1000
-        });
-
-        config.adapter = cache.adapter;
+    // Disable caching for specific requests
+    if (config.dontCache) {
+        config.cache = false
     }
-    return config;
+
+    return config
 }, function (error) {
-    // Do something with request error
-    return Promise.reject(error);
-});
+    return Promise.reject(error)
+})
 
-axios.interceptors.response.use(async function (response) {
-    return response;
+// Global response interceptor
+axiosInstance.interceptors.response.use(async function (response) {
+    return response
 }, function (error) {
     if (error.response) {
-        // The request was made and the server responded with a status code
-        // that falls out of the range of 2xx
-        error = error.response;
+        error = error.response
     } else if (error.request) {
-        // The request was made but no response was received
-        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-        // http.ClientRequest in node.js
-        error = error.request;
+        error = error.request
     } else {
-        // Something happened in setting up the request that triggered an Error
         error = error.message
     }
 
-    const logoutErrors = ["Wrong number of segments", "logged out"];
+    const logoutErrors = ['Wrong number of segments', 'logged out']
     if (error.data && logoutErrors.includes(error.data)) {
-        window.location.reload();
+        window.location.reload()
     }
 
-    return Promise.reject(error);
-});
+    return Promise.reject(error)
+})
 
-export const http = axios;
+export const http = axiosInstance
